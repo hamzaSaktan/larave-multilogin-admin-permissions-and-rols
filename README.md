@@ -63,7 +63,43 @@ Middleware/RedirectIfAuthenticated.php
                 return $next($request);
             }
 
-<h2>create reset password for admin</h2>
+<h2>7- create reset password for admin</h2>
+
+<ul>
+<li>duplicate ForgotPasswordController and ResetPasswordController controllers from user to admin</li>
+<li>add broker and guard functions in ForgotPasswordController and ResetPasswordController controllers</li>
+<li>add showLinkRequestForm function in ForgotPasswordController and return form view</li>
+<li>add showResetForm function in ResetPasswordController and return form view</li>
+<li> duplicat reset password routes from user to admin</li>
+<li>edit reset password email in Admin model by creating sendPasswordResetNotification and return notification AdminResetPasswordNotification</li>
+</ul>
+
+in Admin Model
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token));
+    }
+    
+in terminal:
+
+    php artisan make:notification AdminResetPasswordNotification
+
+
+<h2>login with remember me:</h2>
+
+    if($request->remember){
+            $remember = true;
+        }else{
+            $remember = false;
+       }
+
+        if(Auth::guard('admin')->attempt($request->only('email','password'),$remember)){
+            return Redirect::intended(route('admin.home'));
+        }else{
+            return Redirect::back()->withInput($request->only('email'));
+        }
+
 
 confirm email for admin optional 
 

@@ -26,7 +26,13 @@ class LoginController extends Controller
             'password' => 'required'
         ]);
 
-        if(Auth::guard('admin')->attempt($request->only('email','password'))){
+        if($request->remember){
+            $remember = true;
+        }else{
+            $remember = false;
+        }
+
+        if(Auth::guard('admin')->attempt($request->only('email','password'),$remember)){
             return Redirect::intended(route('admin.home'));
         }else{
             return Redirect::back()->withInput($request->only('email'));
