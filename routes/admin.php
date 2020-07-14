@@ -18,6 +18,7 @@ Route::namespace('Admin')->group(function (){
     Route::group(['middleware'=>['guest:admin']],function(){
         Route::get('/login','LoginController@showLogin')->name('admin.login');
         Route::post('/login','LoginController@login')->name('admin.login.submit');
+
         // password reset
         Route::post('password/email','ForgotPasswordController@sendResetLinkEmail')->name('admin.password.email');
         Route::get('password/reset','ForgotPasswordController@showLinkRequestForm')->name('admin.password.request');
@@ -25,11 +26,27 @@ Route::namespace('Admin')->group(function (){
         Route::get('password/reset/{token}','ResetPasswordController@showResetForm')->name('admin.password.reset');
     });
 
-    Route::group(['middleware' => ['auth:admin']],function(){
+    Route::group(['middleware' => ['auth:admin','verified-admin']],function(){
+
+        Route::get('/register','RegisterController@showRegistrationForm')->name('admin.register');
+        Route::post('/register','RegisterController@create')->name('admin.register');
+
         Route::get('/','HomeController@index')->name('admin.home');
         Route::get('/home','HomeController@index')->name('admin.home');
         Route::post('/logout','LoginController@adminLogout')->name('admin.logout');
+
     });
+
+
+    Route::group(['middleware' => ['auth:admin']],function(){
+
+        // email verification
+        Route::post('email/resend','VerificationController@resend')->name('admin.verification.resend');
+        Route::get('email/verify','VerificationController@show')->name('admin.verification.notice');
+        Route::get('email/verify/{id}/{hash}','VerificationController@verify')->name('admin.verification.verify');
+
+    });
+
 
 });
 
@@ -40,3 +57,11 @@ Route::namespace('Admin')->group(function (){
 // POST     | password/reset         | password.update    | ResetPasswordController@reset
 //
 // GET|HEAD | password/reset/{token} | password.reset     | ResetPasswordController@showResetForm
+
+//
+// POST     | email/resend                     | verification.resend    | App\Http\Controllers\Auth\VerificationController@resend                 | web auth
+//          |                                  |                        |                                                                         |
+//          |                                  |                        |                                                                         | throttle:6,1
+// GET|HEAD | email/verify                     | verification.notice    | App\Http\Controllers\Auth\VerificationController@show                   | web auth
+//          |                                  |                        |                                                                         |
+// GET|HEAD | email/verify/{id}/{hash}         | verification.verify    | App\Http\Controllers\Auth\VerificationController@verify                 | web

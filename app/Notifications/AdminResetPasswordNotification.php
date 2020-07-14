@@ -10,6 +10,7 @@ use Illuminate\Notifications\Notification;
 class AdminResetPasswordNotification extends Notification
 {
     use Queueable;
+    public $token;
 
     /**
      * Create a new notification instance.
