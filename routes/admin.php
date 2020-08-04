@@ -28,6 +28,11 @@ Route::namespace('Admin')->group(function (){
 
     Route::group(['middleware' => ['auth:admin','verified-admin']],function(){
 
+        // dashboard routes
+
+        Route::resource('roles','RolesController')->except('show');
+        Route::resource('admins','AdminsController')->except('show');
+
         Route::get('/register','RegisterController@showRegistrationForm')->name('admin.register');
         Route::post('/register','RegisterController@create')->name('admin.register');
 

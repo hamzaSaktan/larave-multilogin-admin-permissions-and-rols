@@ -7,9 +7,11 @@ use App\Notifications\AdminSendEmailVerificationNotification;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laratrust\Traits\LaratrustUserTrait;
 
 class Admin extends Authenticatable implements MustVerifyEmail
 {
+    use LaratrustUserTrait;
     use Notifiable;
 
     /**
@@ -18,7 +20,7 @@ class Admin extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'email_verified_at'
     ];
 
     /**
@@ -39,12 +41,26 @@ class Admin extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-    public function sendPasswordResetNotification($token)
+    public function scopeWhereRole($query, $role_name)
     {
-        $this->notify(new AdminResetPasswordNotification($token));
+        return $query->whereHas('roles',function($q) use ($role_name){
+            return $q->whereIn('name',(array)$role_name);
+        });
     }
 
-    public function SendEmailVerificationNotification(){
-        $this->notify(new AdminSendEmailVerificationNotification());
+    public function scopeWhereRoleNot($query, $role_name)
+    {
+        return $query->whereHas('roles',function($q) use ($role_name){
+            return $q->whereNotIn('name',(array)$role_name);
+        });
     }
+
+    public function sendPasswordResetNotification($token)
+{
+    $this->notify(new AdminResetPasswordNotification($token));
+}
+
+public function SendEmailVerificationNotification(){
+    $this->notify(new AdminSendEmailVerificationNotification());
+}
 }

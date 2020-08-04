@@ -1,23 +1,12 @@
-@extends('layouts.admin-app')
+@extends('layouts.admin.app')
+
+@section('title','home')
+
+@section('bc')
+    <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+@stop
+
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Admin Dashboard') }}</div>
-
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-                    {{Auth::user()->email}}
-                    {{ __('You are logged in!') }}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-@endsection
+    home
+@stop

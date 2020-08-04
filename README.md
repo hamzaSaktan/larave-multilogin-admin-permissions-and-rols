@@ -419,10 +419,70 @@ Notifications/AdminSendEmailVerificationNotification
     }
 
 
-install laratrust
+<h2>Laratrust</h2>
 
-use laratrust seeder
+setup admin dashboard
 
-create admin dashboard
+install and setup laratrust 
 
-create adminController to create , read , update , delete admins
+use larateust seeder
+<ul>
+<li>add roles super_admin,admin in laratrust_seeder config file and delete old roles</li>
+<li>add all models to super_admin role in laratrust_seeder config file</li>
+</ul>   
+ 
+    'roles_structure' => [
+        'super_admin' => [
+            'admins' => 'c,r,u,d',
+            'roles' => 'c,r,u,d',
+        ],
+    ],
+    
+
+
+create userSeeder to create new admin and attachRole super_admin to it
+
+in terminal:
+
+    php artisan make:seeder userSeeder
+    
+in userSeeder.php 
+
+    public function run()
+    {
+        $admin = Admin::create(
+            [
+                'name' => 'Super Admin',
+                'email' => 'saktanainsebaa@gmail.com',
+                'password' => bcrypt('super_admin')
+            ]
+        );
+
+        $admin->attachRole('super_admin');
+
+    }
+    
+in DatabaseSeeder.php
+
+    public function run()
+    {
+        $this->call([
+            LaratrustSeeder::class,
+            UserSeeder::class
+        ]);
+    }
+    
+in modal
+
+    migrate:fresh --seed
+    
+
+create new rolesControler to create , read , update , delete roles
+
+create adminsController to create , read , update , delete admins
+
+install datatables packege
+
+show admins and roles using datatables
+
+create the creud fonctionality for admins and roles using ajax , modal, notify and refresh datatables after changes
