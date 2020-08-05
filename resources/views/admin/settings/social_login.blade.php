@@ -9,7 +9,6 @@
 
 @section('content')
     <form method="post" class="form-ajax" action="{{ route('admin.settings.store') }}">
-        @csrf
 
         @php
             $sites_names = ['facebook','google'];
@@ -30,12 +29,12 @@
             <div class="tab-pane fade {{ $index == 0 ? 'active show' : '' }} mt-3" id="{{$site_name}}">
 
                 <div class="form-group">
-                    <label for="{{$site_name }}_secret_id">{{ucfirst($site_name)}} Secret id</label>
+                    <label for="{{$site_name }}_client_id">{{ucfirst($site_name)}} Secret id</label>
                     <input type="text"
                            class="form-control"
-                           id="{{$site_name }}_secret_id"
-                           name="{{$site_name }}_secret_id"
-                           value="{{setting($site_name.'_secret_id')}}"
+                           id="{{$site_name }}_client_id"
+                           name="{{$site_name }}_client_id"
+                           value="{{setting($site_name.'_client_id')}}"
                            placeholder="">
                 </div>
 

@@ -489,7 +489,7 @@ create the creud fonctionality for admins and roles using ajax , modal, notify a
 
 <h2>install laravel settings</h2>
 
-1 - install laravel settings package:
+1 - settings package:
 
 https://github.com/anlutro/laravel-settings
 
@@ -559,3 +559,77 @@ social links:
         Route::post('settings','SettingsController@store')->name('admin.settings.store');
         
     
+<h2>socialite</h2>
+
+1 - install socialite using this url:
+
+https://laravel.com/docs/7.x/socialite
+
+2 - place credentials in config/services.php
+
+    'facebook' => [
+        'client_id' => env('FACEBOOK_CLIENT_ID'),
+        'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
+        'redirect' => 'FACEBOOK_REDIRECT',
+    ],
+
+    'google' => [
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect' => 'GOOGLE_REDIRECT',
+    ],
+
+3 - Routing in routes/web.php
+
+	Route::get('/login/{provider}', 'Auth\LoginController@redirectToProvider')->where('provider','facebook|google');
+	Route::get('/login/{provider}/callback', 'Auth\LoginController@handleProviderCallback')->where('provider','facebook|google');
+
+
+4 - add redirectToProvider,handleProviderCallback functions in LoginController controller and use Laravel\Socialite\Facades\Socialite;
+
+
+	use Laravel\Socialite\Facades\Socialite;
+
+5 - in redirectToProvider function set config credentials to config/services using settings
+	
+    public function redirectToProvider($provider)
+    {
+        config([
+            'services.'.$provider.'.client_id' => setting($provider.'_client_id'),
+            'services.'.$provider.'.client_secret' => setting($provider.'_client_secret'),
+            'services.'.$provider.'.redirect' => setting($provider.'_redirect_url'),
+        ]);
+
+        return Socialite::driver($provider)->redirect();
+    }
+
+5 - in handleProviderCallback function check if excists one user have the returned provider and provider_id if not then create a new user with the new provider and provider_id
+and login the user, and redirect to home page with intended function
+
+    public function handleProviderCallback($provider)
+    {
+        try{
+            $social_user = Socialite::driver($provider)->user();
+        }catch (Exception $e){
+            return redirect('/');
+        }
+
+        $user = User::where('provider',$provider)
+                    ->where('provider_id',$social_user->getId())
+                    ->first();
+
+        if(!$user){
+            $user = User::create([
+                'name' => $social_user->getName(),
+                'email' => $social_user->getEmail(),
+                'provider_id' => $social_user->getId(),
+                'provider' => $provider,
+            ]);
+        }
+
+        Auth::login($user,true);
+
+        return redirect()->intended('/');
+    }
+
+

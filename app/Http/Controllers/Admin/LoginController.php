@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Laravel\Socialite\Facades\Socialite;
+use mysql_xdevapi\Exception;
 
 class LoginController extends Controller
 {
@@ -17,7 +19,6 @@ class LoginController extends Controller
     {
         return view('admin.auth.login');
     }
-
 
     public function login(Request $request)
     {

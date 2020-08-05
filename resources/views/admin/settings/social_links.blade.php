@@ -9,7 +9,6 @@
 
 @section('content')
     <form method="post" class="form-ajax" action="{{ route('admin.settings.store') }}">
-        @csrf
 
         @php
             $sites_names = ['facebook','google'];
