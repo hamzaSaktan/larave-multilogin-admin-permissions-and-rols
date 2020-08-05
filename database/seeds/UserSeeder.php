@@ -13,7 +13,7 @@ class UserSeeder extends Seeder
     {
         $admin = Admin::create(
             [
-                'name' => 'Super Admin',
+                'name' => 'Saktan Hamza',
                 'email' => 'saktanainsebaa@gmail.com',
                 'password' => bcrypt('super_admin')
             ]

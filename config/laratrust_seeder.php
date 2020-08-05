@@ -15,6 +15,12 @@ return [
         'super_admin' => [
             'admins' => 'c,r,u,d',
             'roles' => 'c,r,u,d',
+            'settings' => 'c,r,u,d',
+        ],
+        'uploader' => [
+            'admins' => 'c,r,u,d',
+            'roles' => 'c,r,u,d',
+            'settings' => 'c,r,u,d',
         ],
     ],
 
@@ -26,6 +32,6 @@ return [
     ],
 
     'models' => [
-        'admins', 'roles'
+        'admins', 'roles','settings'
     ]
 ];

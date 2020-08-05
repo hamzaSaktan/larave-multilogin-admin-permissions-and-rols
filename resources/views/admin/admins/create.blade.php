@@ -38,7 +38,7 @@
                         <option value="{{$role->id}}">{{ $role->display_name }}</option>
                     @endforeach
                 </select>
-            <a href="{{ route('roles.index') }}">Add Role</a>
+            <a href="{{ route('roles.index') }}">Add New Role</a>
         </div>
 
     <button type="submit" class="btn btn-primary">Submit</button>

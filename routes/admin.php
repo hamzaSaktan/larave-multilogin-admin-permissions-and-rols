@@ -33,6 +33,12 @@ Route::namespace('Admin')->group(function (){
         Route::resource('roles','RolesController')->except('show');
         Route::resource('admins','AdminsController')->except('show');
 
+//        Setting
+        Route::get('settings','SettingsController@index')->name('admin.settings.index');
+        Route::get('settings/social-links','SettingsController@social_links')->name('admin.social.links');
+        Route::get('settings/social-login','SettingsController@social_login')->name('admin.social.login');
+        Route::post('settings','SettingsController@store')->name('admin.settings.store');
+
         Route::get('/register','RegisterController@showRegistrationForm')->name('admin.register');
         Route::post('/register','RegisterController@create')->name('admin.register');
 

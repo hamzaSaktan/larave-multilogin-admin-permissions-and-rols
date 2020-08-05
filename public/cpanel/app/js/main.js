@@ -66,8 +66,12 @@
             success : function(data){
                 console.log(data);
 
-                table.ajax.reload();
+                if(typeof table != 'undefined'){
+                    table.ajax.reload();
+                }
+
                 $('.modal').modal('hide');
+
                     if('response' in data){
                         swal(data.response.title, data.response.message, data.response.status);
                     }

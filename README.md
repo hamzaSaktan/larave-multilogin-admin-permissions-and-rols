@@ -486,3 +486,76 @@ install datatables packege
 show admins and roles using datatables
 
 create the creud fonctionality for admins and roles using ajax , modal, notify and refresh datatables after changes
+
+<h2>install laravel settings</h2>
+
+1 - install laravel settings package:
+
+https://github.com/anlutro/laravel-settings
+
+2 - in config laratrus-seeder file add settings model to supper_admin and execute
+    
+    'roles_structure' => [
+        'super_admin' => [
+            'admins' => 'c,r,u,d',
+            'roles' => 'c,r,u,d',
+            'settings' => 'c,r,u,d',
+        ],
+    ],
+   
+in terminal: 
+
+	php artisan migrate:fresh --seed
+	
+	
+3 - add settings item in menu if auth::user()->hasPermission('settings-read')
+
+4 - create settingsController
+
+    php artisan make:controller SettingsController
+    
+
+social_login function,
+
+    public function social_login(){
+        return view('social_login.blade.php');
+    } 
+    
+social_links function
+
+    public function social_login(){
+        return view('social_login.blade.php');
+    }
+    
+and store function
+
+    public function store(Request $request){
+        setting($request->all())->save();
+    }
+
+5 - add views social-links and social-login
+
+social-login.blade.php
+social-links.blade.php
+
+facebook and google login fields:
+
+	facebook secret id
+	facebook client secret 
+	facebook redirect url
+
+	google secret id
+	google client secret 
+	google redirect url
+
+social links:
+	facebook page, twitter, instagram ext...
+
+6 - add routs
+
+        Route::get('settings','SettingsController@index')->name('admin.settings.index');
+        Route::get('settings/social-links','SettingsController@social_links')->name('admin.social.links');
+        Route::get('settings/social-login','SettingsController@social_login')->name('admin.social.login');
+        Route::post('settings','SettingsController@store')->name('admin.settings.store');
+        
+    

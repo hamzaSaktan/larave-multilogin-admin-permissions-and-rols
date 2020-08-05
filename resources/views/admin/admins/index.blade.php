@@ -4,7 +4,7 @@
 
 @section('bc')
     <li class="breadcrumb-item"><a href="{{ route('admin.home') }}"><i class="fa fa-home fa-lg"></i></a></li>
-    <li class="breadcrumb-item">Roles</li>
+    <li class="breadcrumb-item">Amins</li>
 @stop
 
 
