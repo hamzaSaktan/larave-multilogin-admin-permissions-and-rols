@@ -95,8 +95,8 @@ class AdminsController extends Controller
 
         return response()->json([
             'response' => [
-                'status' => 'success',
-                'title' => 'Updated',
+                'status'  => 'success',
+                'title'   => 'Updated',
                 'message' => 'Admin '.$request->name.' Updated',
             ]
         ]);

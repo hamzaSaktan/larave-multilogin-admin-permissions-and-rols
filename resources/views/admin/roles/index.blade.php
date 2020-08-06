@@ -12,10 +12,12 @@
     @if(Auth::user()->hasPermission('roles-create'))
         <button class="btn btn-primary btn-sm action-create mb-3"
                 data-route="{{route('roles.create')}}"><i
-                class="fa fa-add"></i>Add Role</button>
+                class="fa fa-add"></i>Add Role
+        </button>
     @else
         <button disabled class="btn btn-primary btn-sm mb-3">
-            <i class="fa fa-add"></i>Add Role</button>
+            <i class="fa fa-add"></i>Add Role
+        </button>
     @endif
 
     <table id="table_id" class="display table table-bordered table-striped dataTable">
@@ -34,17 +36,17 @@
 @section('javascript')
     <script>
         // Datatables
-        let table = $('#table_id').DataTable( {
+        let table = $('#table_id').DataTable({
             responsive: true,
-            processing : true,
+            processing: true,
             // order : false,
-            ajax : '{{ route('roles.index') }}',
+            ajax: '{{ route('roles.index') }}',
             columns: [
-                { data: 'name' },
-                { data: 'display_name' },
-                { data: 'description' },
-                { data: 'permissions' },
-                { data: 'actions' },
+                {data: 'name'},
+                {data: 'display_name'},
+                {data: 'description'},
+                {data: 'permissions'},
+                {data: 'actions'},
             ],
             {{--"language": {!! __('plugins.datatables'); !!}--}}
         });

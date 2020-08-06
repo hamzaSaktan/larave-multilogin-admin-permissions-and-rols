@@ -58,7 +58,7 @@
                                 @foreach($permissions_map as $key=>$permission)
                                     <option
                                         {{ $role->hasPermission($model.'-'.$permission) ? 'selected' : '' }}
-                                        value="{{ $model.'-'.$permission }}" >
+                                        value="{{ $model.'-'.$permission }}">
 
                                         {{ ucfirst($permission) }}
                                     </option>

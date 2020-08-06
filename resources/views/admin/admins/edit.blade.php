@@ -27,7 +27,8 @@
         <select class="form-control select2-class" name="role">
             <optgroup label="Select Roles">
                 @foreach($roles as $role)
-                    <option {{  $admin->hasRole($role->name) ? 'selected' : '' }} value="{{$role->id}}">{{ $role->display_name }}</option>
+                    <option
+                        {{  $admin->hasRole($role->name) ? 'selected' : '' }} value="{{$role->id}}">{{ $role->display_name }}</option>
             @endforeach
         </select>
     </div>

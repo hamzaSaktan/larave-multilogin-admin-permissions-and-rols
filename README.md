@@ -487,9 +487,9 @@ show admins and roles using datatables
 
 create the creud fonctionality for admins and roles using ajax , modal, notify and refresh datatables after changes
 
-<h2>install laravel settings</h2>
+<h2>settings package</h2>
 
-1 - settings package:
+1 - install laravel settings package:
 
 https://github.com/anlutro/laravel-settings
 

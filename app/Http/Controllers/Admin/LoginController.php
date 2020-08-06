@@ -15,6 +15,7 @@ use mysql_xdevapi\Exception;
 class LoginController extends Controller
 {
     use AuthenticatesUsers;
+
     public function showLogin()
     {
         return view('admin.auth.login');
@@ -23,19 +24,19 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
+            'email'    => 'required|email',
             'password' => 'required'
         ]);
 
-        if($request->remember){
+        if ($request->remember) {
             $remember = true;
-        }else{
+        } else {
             $remember = false;
         }
 
-        if(Auth::guard('admin')->attempt($request->only('email','password'),$remember)){
+        if (Auth::guard('admin')->attempt($request->only('email', 'password'), $remember)) {
             return Redirect::intended(route('admin.home'));
-        }else{
+        } else {
             return Redirect::back()->withInput($request->only('email'));
         }
     }

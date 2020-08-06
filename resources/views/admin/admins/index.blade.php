@@ -11,12 +11,14 @@
 @section('content')
 
     @if(Auth::user()->hasPermission('admins-create'))
-    <button class="btn btn-primary btn-sm action-create mb-3"
-            data-route="{{route('admins.create')}}"><i
-            class="fa fa-add"></i>Add Admin</button>
+        <button class="btn btn-primary btn-sm action-create mb-3"
+                data-route="{{route('admins.create')}}"><i
+                class="fa fa-add"></i>Add Admin
+        </button>
     @else
         <button disabled class="btn btn-primary btn-sm mb-3"><i
-                class="fa fa-add"></i>Add Admin</button>
+                class="fa fa-add"></i>Add Admin
+        </button>
     @endif
 
     <table id="table_id" class="display table table-bordered table-striped dataTable">
@@ -34,16 +36,16 @@
 @section('javascript')
     <script>
         // Datatables
-        let table = $('#table_id').DataTable( {
+        let table = $('#table_id').DataTable({
             responsive: true,
-            processing : true,
+            processing: true,
             // order : false,
-            ajax : '{{ route('admins.index') }}',
+            ajax: '{{ route('admins.index') }}',
             columns: [
-                { data: 'name' },
-                { data: 'email' },
-                { data: 'roles' },
-                { data: 'actions' },
+                {data: 'name'},
+                {data: 'email'},
+                {data: 'roles'},
+                {data: 'actions'},
             ],
             {{--"language": {!! __('plugins.datatables'); !!}--}}
         });

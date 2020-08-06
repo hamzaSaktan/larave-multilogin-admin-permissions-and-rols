@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home3/futlwgmy/public_html/socialite
+    - /bin/cp * $DEPLOYPATH

@@ -14,17 +14,17 @@
             $sites_names = ['facebook','google'];
         @endphp
 
-            @foreach($sites_names as $index => $site_name)
-                <div class="form-group">
-                    <label for="{{$site_name }}_link">{{ucfirst($site_name)}} Link</label>
-                    <input type="text"
-                           class="form-control"
-                           id="{{$site_name }}_link"
-                           name="{{$site_name }}_link"
-                           value="{{ setting($site_name.'_link') }}"
-                           placeholder="">
-                </div>
-            @endforeach
+        @foreach($sites_names as $index => $site_name)
+            <div class="form-group">
+                <label for="{{$site_name }}_link">{{ucfirst($site_name)}} Link</label>
+                <input type="text"
+                       class="form-control"
+                       id="{{$site_name }}_link"
+                       name="{{$site_name }}_link"
+                       value="{{ setting($site_name.'_link') }}"
+                       placeholder="">
+            </div>
+        @endforeach
 
         <button type="submit" class="btn btn-primary">Submit</button>
 
