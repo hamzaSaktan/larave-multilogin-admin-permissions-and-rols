@@ -565,7 +565,7 @@ social links:
 
 https://laravel.com/docs/7.x/socialite
 
-2 - place credentials in config/services.php
+place credentials in config/services.php
 
     'facebook' => [
         'client_id' => env('FACEBOOK_CLIENT_ID'),
@@ -579,57 +579,93 @@ https://laravel.com/docs/7.x/socialite
         'redirect' => 'GOOGLE_REDIRECT',
     ],
 
-3 - Routing in routes/web.php
+Routing in routes/web.php
 
 	Route::get('/login/{provider}', 'Auth\LoginController@redirectToProvider')->where('provider','facebook|google');
 	Route::get('/login/{provider}/callback', 'Auth\LoginController@handleProviderCallback')->where('provider','facebook|google');
 
 
-4 - add redirectToProvider,handleProviderCallback functions in LoginController controller and use Laravel\Socialite\Facades\Socialite;
+add socialite_providers to config/app.php
 
+	'socialite_providers' => ['facebook', 'google', 'github'], 
+
+add 'provider', 'provider_id' to $fillable App\User
+
+	protected $fillable = [
+        	'name', 'email', 'password', 'provider', 'provider_id'
+    	];
+
+and in user migration file:
+	
+	public function up()
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->string('provider')->nullable();
+            $table->string('provider_id')->nullable();
+            $table->rememberToken();
+            $table->timestamps();
+        });
+    }
+
+add redirectToProvider,handleProviderCallback in LoginController controller and use Laravel\Socialite\Facades\Socialite;
 
 	use Laravel\Socialite\Facades\Socialite;
 
-5 - in redirectToProvider function set config credentials to config/services using settings
+__construct function set config credentials to config/services using settings
+
+    public function __construct()
+    {
+        $this->middleware('guest')->except('logout');
+
+        $providers = config('app.socialite_providers');
+        $config    = [];
+
+        foreach ($providers as $provider) {
+            $config['services.'.$provider.'.client_id']     = setting($provider.'_client_id');
+            $config['services.'.$provider.'.client_secret'] = setting($provider.'_client_secret');
+            $config['services.'.$provider.'.redirect']      = setting($provider.'_redirect_url');
+        }
+        config($config);
+    }
 	
+add $provider parametter to redirectToProvider function and assign it to driver($provider)
+
     public function redirectToProvider($provider)
     {
-        config([
-            'services.'.$provider.'.client_id' => setting($provider.'_client_id'),
-            'services.'.$provider.'.client_secret' => setting($provider.'_client_secret'),
-            'services.'.$provider.'.redirect' => setting($provider.'_redirect_url'),
-        ]);
-
         return Socialite::driver($provider)->redirect();
     }
 
-5 - in handleProviderCallback function check if excists one user have the returned provider and provider_id if not then create a new user with the new provider and provider_id
-and login the user, and redirect to home page with intended function
+handleProviderCallback function check if excists one user have the returned provider and provider_id if not create a new user with the new provider and provider_id
+and login the user, redirect to home page with intended function
 
     public function handleProviderCallback($provider)
     {
-        try{
+	try {
             $social_user = Socialite::driver($provider)->user();
-        }catch (Exception $e){
+        } catch (Exception $e) {
             return redirect('/');
         }
 
-        $user = User::where('provider',$provider)
-                    ->where('provider_id',$social_user->getId())
+        $user = User::where('provider', $provider)
+                    ->where('provider_id', $social_user->getId())
                     ->first();
 
-        if(!$user){
+        if ( ! $user) {
             $user = User::create([
-                'name' => $social_user->getName(),
-                'email' => $social_user->getEmail(),
+                'name'        => $social_user->getName(),
+                'email'       => $social_user->getEmail(),
+                'password'    => bcrypt($social_user->getId()),
                 'provider_id' => $social_user->getId(),
-                'provider' => $provider,
+                'provider'    => $provider,
             ]);
         }
 
-        Auth::login($user,true);
+        Auth::login($user, true);
 
         return redirect()->intended('/');
     }
-
-

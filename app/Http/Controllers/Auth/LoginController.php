@@ -8,8 +8,7 @@ use App\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
-
-//use mysql_xdevapi\Exception;
+use mysql_xdevapi\Exception;
 
 class LoginController extends Controller
 {
@@ -38,18 +37,24 @@ class LoginController extends Controller
      *
      * @return void
      */
+
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+
+        $providers = config('app.socialite_providers');
+        $config    = [];
+
+        foreach ($providers as $provider) {
+            $config['services.'.$provider.'.client_id']     = setting($provider.'_client_id');
+            $config['services.'.$provider.'.client_secret'] = setting($provider.'_client_secret');
+            $config['services.'.$provider.'.redirect']      = setting($provider.'_redirect_url');
+        }
+        config($config);
     }
 
     public function redirectToProvider($provider)
     {
-        config([
-            'services.'.$provider.'.client_id'     => setting($provider.'_client_id'),
-            'services.'.$provider.'.client_secret' => setting($provider.'_client_secret'),
-            'services.'.$provider.'.redirect'      => setting($provider.'_redirect_url'),
-        ]);
 
         return Socialite::driver($provider)->redirect();
     }
@@ -71,6 +76,7 @@ class LoginController extends Controller
             $user = User::create([
                 'name'        => $social_user->getName(),
                 'email'       => $social_user->getEmail(),
+                'password'    => bcrypt($social_user->getId()),
                 'provider_id' => $social_user->getId(),
                 'provider'    => $provider,
             ]);
