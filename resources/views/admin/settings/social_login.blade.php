@@ -11,7 +11,7 @@
     <form method="post" class="form-ajax" action="{{ route('admin.settings.store') }}">
 
         @php
-            $sites_names = ['facebook','google'];
+            $sites_names = ['facebook','google','github'];
         @endphp
 
         <ul class="nav nav-tabs">
@@ -30,7 +30,7 @@
                 <div class="tab-pane fade {{ $index == 0 ? 'active show' : '' }} mt-3" id="{{$site_name}}">
 
                     <div class="form-group">
-                        <label for="{{$site_name }}_client_id">{{ucfirst($site_name)}} Secret id</label>
+                        <label for="{{$site_name }}_client_id">{{ucfirst($site_name)}} Client id</label>
                         <input type="text"
                                class="form-control"
                                id="{{$site_name }}_client_id"

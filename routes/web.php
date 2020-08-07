@@ -22,7 +22,7 @@ Auth::routes(['verify' => true]);
 Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');
 
 Route::get('/login/{provider}', 'Auth\LoginController@redirectToProvider')
-    ->where('provider','facebook|google');
+     ->where('provider', 'facebook|google|github');
 
 Route::get('/login/{provider}/callback', 'Auth\LoginController@handleProviderCallback')
-    ->where('provider','facebook|google');
+     ->where('provider', 'facebook|google|github');

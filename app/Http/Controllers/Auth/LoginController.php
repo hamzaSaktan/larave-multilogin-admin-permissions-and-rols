@@ -8,6 +8,7 @@ use App\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
+
 //use mysql_xdevapi\Exception;
 
 class LoginController extends Controller
@@ -45,9 +46,9 @@ class LoginController extends Controller
     public function redirectToProvider($provider)
     {
         config([
-            'services.'.$provider.'.client_id' => setting($provider.'_client_id'),
+            'services.'.$provider.'.client_id'     => setting($provider.'_client_id'),
             'services.'.$provider.'.client_secret' => setting($provider.'_client_secret'),
-            'services.'.$provider.'.redirect' => setting($provider.'_redirect_url'),
+            'services.'.$provider.'.redirect'      => setting($provider.'_redirect_url'),
         ]);
 
         return Socialite::driver($provider)->redirect();
@@ -55,26 +56,27 @@ class LoginController extends Controller
 
     public function handleProviderCallback($provider)
     {
-        try{
+
+        try {
             $social_user = Socialite::driver($provider)->user();
-        }catch (Exception $e){
+        } catch (Exception $e) {
             return redirect('/');
         }
 
-        $user = User::where('provider',$provider)
-                    ->where('provider_id',$social_user->getId())
+        $user = User::where('provider', $provider)
+                    ->where('provider_id', $social_user->getId())
                     ->first();
 
-        if(!$user){
+        if ( ! $user) {
             $user = User::create([
-                'name' => $social_user->getName(),
-                'email' => $social_user->getEmail(),
+                'name'        => $social_user->getName(),
+                'email'       => $social_user->getEmail(),
                 'provider_id' => $social_user->getId(),
-                'provider' => $provider,
+                'provider'    => $provider,
             ]);
         }
 
-        Auth::login($user,true);
+        Auth::login($user, true);
 
         return redirect()->intended('/');
     }
