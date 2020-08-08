@@ -1,9 +1,5 @@
 <?php
 
-
-use anlutro\LaravelSettings\SettingStore;
-use anlutro\LaravelSettings\SettingsManager
-
 return [
 
     /*
